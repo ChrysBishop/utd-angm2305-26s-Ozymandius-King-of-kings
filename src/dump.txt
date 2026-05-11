@@ -7,36 +7,37 @@ class Animation():
         self.life = 100
         self.id = id
         self.hasPlayed = False
-        self.surface = pygame.Surface((800, 600))
-        self.images = [("test.png", 255)]
 
-    def play_animation(self, age):
+    def play_animation(self, animNumber, screen, age):
         # Needs to be composed of the animation number
         # loads the images/sprites and runs other commands
             # general structure:
-            # if age in this range:
+            # if age == this:
             # load this/run this command
-        if age == 0:
-            resolution = (800, 600)
-            screen = pygame.display.set_mode(resolution)
-
-            # load all the images we need here and play audio 
-            pygame.mixer.music.load("ozymandias.mp3")
-            pygame.mixer.music.play()
-
-            # fade in from black?
-
-            # load images
-            surface = pygame.Surface((800, 600))
-            pygame.Surface.convert_alpha(surface)
-            image = pygame.image.load(self.images[0][0])  
-            screen.blit(image, (0,0))          
-            
 
 
-        # around dt 7800, fade to black -> new scene (need fade to black function)
+        match animNumber:
+            case 0:
+                pass
 
-        # ends at approx dt 12800
+        # img = pygame.image.load('test.png')
+        # match animNumber:
+        #     case 0:
+        #         button = Button()
+        #         button.draw(screen)
+        #         for event in pygame.event.get():
+        #             if event.type == pygame.MOUSEBUTTONDOWN:
+        #                 if button.is_click_within_area(button.area[0][0], button.area[0][1], 
+        #                                         button.size, pygame.mouse.get_pos()[0], 
+        #                                        pygame.mouse.get_pos()[1]) == True:
+        #                     screen.blit(img, (0,0))
+        #     case 1:
+        #         button = Button((50, 50))
+        #         button.draw(screen)
+        #         if button.is_click_within_area(button.area[0][0], button.area[0][1], 
+        #                                         button.size, pygame.mouse.get_pos()[0], 
+        #                                         pygame.mouse.get_pos()[1]) == True:
+        pygame.QUIT
 
     def set_played_true(self):
         self.hasPlayed = True
@@ -84,39 +85,42 @@ class Button():
 
 class Sequence():
 
-    def __init__(self, age):
+    def __init__(self, screen, age=0):
         self.scene_list = [Animation(i) for i in range(2)]
-        self.age = 0
+        self.screen = screen
         self.sequenceId = 0
 
     def run_seq(self, dt):
         for i in self.scene_list:
             if i.id == self.sequenceId:
-                i.play_animation(dt)
+                i.play_animation(i.id, self.screen, dt)
 
-    def update(self, dt):
-        self.age += dt
-        self.run_seq(self.age)
+    def update(self):
+        pass
 
 
 def main():
 
     pygame.init()
     pygame.display.set_caption("Ozymandias")
-    sequence = Sequence(0)
+    resolution = (800, 600)
+    screen = pygame.display.set_mode(resolution)
+    sequence = Sequence(screen)
     clock = pygame.time.Clock()
     dt = 0
+    #button = Button((50, 50))
     
     running = True
     while running:
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print(sequence.age)
+            # if event.type == pygame.MOUSEBUTTONDOWN:
+            #     if button.is_click_within_area(button.area[0][0], button.area[0][1], 
+            #                                    button.size, pygame.mouse.get_pos()[0], 
+            #                                    pygame.mouse.get_pos()[1]) == True:
+            #         pygame.QUIT
             if event.type == pygame.QUIT:
                 running = False
-                
-        sequence.update(dt)
-        pygame.display.flip()
+        #button.draw(screen)
         dt = clock.tick(20)
 
 
